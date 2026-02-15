@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Date extends StatelessWidget {
-  const Date({
+class DateContainer extends StatelessWidget {
+  const DateContainer({
     super.key,
     required this.month,
     required this.day,
@@ -24,7 +24,7 @@ class Date extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.deepPurple : Colors.grey.shade100,
+          color: isSelected ? Colors.deepPurple : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(

@@ -12,22 +12,21 @@ class AuthScreen extends StatefulWidget {
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
+final TextEditingController nameController = TextEditingController();
+bool isPasswordHidden = true;
+
 class _AuthScreenState extends State<AuthScreen> {
   final ImagePicker picker = ImagePicker();
   XFile? photo;
 
   void pickImageFromCamera() async {
     photo = await picker.pickImage(source: ImageSource.camera);
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   void pickImageFromGallery() async {
     photo = await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   @override
@@ -35,76 +34,126 @@ class _AuthScreenState extends State<AuthScreen> {
     return Scaffold(
       body: Center(
         child: Padding(
-          padding:  EdgeInsets.symmetric(horizontal: 16.0),
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                 Visibility(
-                   visible: photo==null,
-                     replacement: CircleAvatar(radius: 100, backgroundColor: Colors.black
-                         ,backgroundImage: Image.file(File(photo?.path??'')).image
-
-                     ),
-                     child: CircleAvatar(
-                       radius: 100,
-                       backgroundColor: Colors.black,
-                       child: Icon(
-                         Icons.person,
-                         size: 100,
-                         color: Colors.deepPurple,
-                       ),
-                     ) , ) ,
-                 SizedBox(height: 20),
+                Visibility(
+                  visible: photo == null,
+                  replacement: CircleAvatar(
+                    radius: 100,
+                    backgroundColor: Colors.black,
+                    backgroundImage: Image.file(File(photo?.path ?? '')).image,
+                  ),
+                  child: CircleAvatar(
+                    radius: 100,
+                    backgroundColor: Colors.black,
+                    child: Icon(
+                      Icons.person,
+                      size: 100,
+                      color: Colors.deepPurple,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
                 AppButton(
                   title: 'Upload From Camera',
                   onPressed: pickImageFromCamera,
                 ),
                 const SizedBox(height: 20),
-                AppButton(title: 'Upload From Gallery', onPressed: pickImageFromGallery ),
+                AppButton(
+                  title: 'Upload From Gallery',
+                  onPressed: pickImageFromGallery,
+                ),
                 SizedBox(height: 10),
                 Divider(thickness: 2, color: Colors.black),
-                SizedBox(height: 10,),
+                SizedBox(height: 10),
 
-                TextFormField(onTapOutside: (value){
-                  FocusScope.of(context).unfocus() ;  },
-                decoration: InputDecoration(
-                  label:Row( 
-                    children: [
-                      Icon(Icons.person,color: Colors.deepPurple,),
-                      Text('Enter User Name'),
-                    ]),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12) ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.deepPurple , width: 2)
+                TextFormField(
+                  controller: nameController,
+                  onTapOutside: (value) {
+                    FocusScope.of(context).unfocus();
+                  },
+
+                  decoration: InputDecoration(
+                    label: Row(
+                      children: [
+                        Icon(Icons.person, color: Colors.deepPurple),
+                        Text('Enter User Name'),
+                      ],
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Colors.deepPurple,
+                        width: 2,
+                      ),
+                    ),
                   ),
                 ),
+                SizedBox(height: 10),
+                Divider(thickness: 1, color: Colors.grey),
+                SizedBox(height: 10),
 
-                ),
-                SizedBox(height: 10,),
+                TextFormField(
+                  obscureText: isPasswordHidden,
+                  onTapOutside: (value) {
+                    FocusScope.of(context).unfocus();
+                  },
 
-                TextFormField(onTapOutside: (value){
-                FocusScope.of(context).unfocus() ;  },
-
-                decoration: InputDecoration(
-
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    label: Row(
+                      children: [
+                        Icon(Icons.lock, color: Colors.deepPurple),
+                        Text('Enter User password'),
+                      ],
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        isPasswordHidden
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: Colors.deepPurple,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          isPasswordHidden = !isPasswordHidden;
+                        });
+                      },
+                    ),
                   ),
-                label: Row(
-                  children: [
-                  Icon(Icons.lock,color: Colors.deepPurple,),
-                  Text('Enter User password'),
-                ],),
                 ),
+                SizedBox(height: 10),
+                AppButton(
+                  title: 'register',
+                  onPressed: () {
+                    if (nameController.text.isEmpty || photo == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('من فضلك ادخل الاسم واختار صورة'),
+                        ),
+                      );
+                      return;
+                    }
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (c) => HomeScreen(
+                          userName: nameController.text,
+                          userImage: File(photo!.path),
+                        ),
+                      ),
+                      (e) => false,
+                    );
+                  },
                 ),
-                SizedBox(height: 10,),
-                AppButton(title: 'register', onPressed: (){
-                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (c)=>HomeScreen()), (e)=>false);
-                })
               ],
             ),
           ),

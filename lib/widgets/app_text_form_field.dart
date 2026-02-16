@@ -7,12 +7,14 @@ class AppTextFormField extends StatelessWidget {
   final String? hintText;
   final bool? isReadOnly;
   final void Function()? onTap   ;
+  final TextEditingController  controller;
   final String? Function(String?)? validator;
-  const AppTextFormField({super.key, required this.labelText, this.maxLines, this.suffixIcon, required this.hintText, this.isReadOnly, this.onTap, this.validator });
+  const AppTextFormField({super.key, required this.labelText, this.maxLines, this.suffixIcon, required this.hintText, this.isReadOnly, this.onTap, this.validator, required this.controller });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       validator: validator?? (value) {
         if (value == null || value.isEmpty) {
           return 'this field is required';

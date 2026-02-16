@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
-
+import 'package:taskaty_app/models/task_model.dart';
 class TaskContainer extends StatelessWidget {
-  final MaterialColor color ;
-  final  String title ;
-  final String description ;
-  final String time ;
+  final TaskModel task;
 
-  const TaskContainer({super.key,required this.color,required this.title,required this.description,required this.time});
+  const TaskContainer({super.key, required this.task});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 120,
-      width: double.infinity,
+    return  Container(
+        height: 120,
+        width: double.infinity,
 
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(22),
-      ) ,
+        decoration: BoxDecoration(
+          color: task.taskColor,
+          borderRadius: BorderRadius.circular(22),
+        ) ,
 
 
         child: Padding(
@@ -28,7 +25,7 @@ class TaskContainer extends StatelessWidget {
               children: [
 
                 Text(
-                  title,
+                  task.taskTitle,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -41,7 +38,7 @@ class TaskContainer extends StatelessWidget {
                     const Icon(Icons.access_time, color: Colors.white, size: 18),
                     const SizedBox(width: 8),
                     Text(
-                      time,
+                      '${task.taskStartTime} - ${task.taskEndTime}',
                       style: TextStyle(
                         color: Colors.white ,
                         fontSize: 14,
@@ -62,8 +59,8 @@ class TaskContainer extends StatelessWidget {
                     Center(
                       child: RotatedBox(
                         quarterTurns: 3,
-                        child: const Text(
-                          'TODO',
+                        child:  Text(
+                          task.taskStatus,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
@@ -78,7 +75,7 @@ class TaskContainer extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  description,
+                  task.taskDescription,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,
@@ -87,7 +84,7 @@ class TaskContainer extends StatelessWidget {
                 ),
 
               ],
-            
+
             ),
           ),
         )

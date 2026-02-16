@@ -1,9 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:taskaty_app/models/task_model.dart';
 import 'package:taskaty_app/widgets/date_and_add_task_row.dart';
 import 'package:taskaty_app/widgets/date_container.dart';
 import 'package:taskaty_app/widgets/home_app_bar.dart';
 import 'package:taskaty_app/widgets/task_item.dart';
+
+import 'add_task_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final String userName;
@@ -34,10 +38,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 userImage: widget.userImage,
               ),
               SizedBox(height: 10),
-              DateAndAddTaskRow(),
+              DateAndAddTaskRow(
+                onPressed: () async {
+
+              await Navigator.push(context, MaterialPageRoute(builder: (context) => AddTaskScreen()));
+                setState(() {
+
+                });
+
+              } ,),
               SizedBox(height: 10),
               Row(
-                spacing: 15,
                 children: [
                   DateContainer(
                     month: 'OCT',
@@ -89,14 +100,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               SizedBox(height: 10),
-              ListView.separated(
+
+              Visibility(
+                visible: tasks.isEmpty,
+                replacement: ListView.separated(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) => TaskItem(),
-                separatorBuilder: (BuildContext context, int index) =>
+                  itemBuilder: (context, index) => TaskItem(
+                    task: tasks[index],
+                    onDelete: () {
+                      setState(() {});
+                    },
+                  ),
+
+                  separatorBuilder: (BuildContext context, int index) =>
                     SizedBox(height: 10),
-                itemCount: 10,
+                itemCount: tasks.length,
               ),
+             child: Lottie.asset('assets/images/Empty.json')
+                , )
             ],
           ),
         ),

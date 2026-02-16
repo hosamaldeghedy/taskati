@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../screens/add_task_screen.dart';
 import 'add_task_btn.dart';
 class DateAndAddTaskRow extends StatelessWidget {
-  const DateAndAddTaskRow({super.key});
+
+  final void Function() onPressed;
+  const DateAndAddTaskRow({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +35,9 @@ class DateAndAddTaskRow extends StatelessWidget {
             ],
           ),
         ),
-        InkWell(child: AddTaskBtn ( onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => AddTaskScreen()));
-        } ))   ,
+        InkWell(child:
+
+        AddTaskBtn ( onPressed: onPressed))   ,
 
       ],
     ) ;

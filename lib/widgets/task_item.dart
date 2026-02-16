@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:taskaty_app/models/task_model.dart';
 import 'package:taskaty_app/widgets/task_container.dart';
 
 class TaskItem extends StatelessWidget {
-  const TaskItem({super.key});
+  final TaskModel task;
+  final VoidCallback onDelete;
+  const  TaskItem({super.key, required this.task, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
     return
       Dismissible(
+
       key: UniqueKey(),
       direction: DismissDirection.endToStart,
-      onDismissed: (direction) {
-        // Handle task deletion here
-      },
+        onDismissed: (_) {
+          tasks.removeAt(tasks.indexOf(task));
+          onDelete();
+        },
 
-      child: TaskContainer(
-        color: Colors.deepPurple,
-        title: 'Task Title',
-        description: 'I will do this task',
-        time: '2:25am-2:40am',
-      ),
+      child: TaskContainer(task: task),
     );
   }
 }

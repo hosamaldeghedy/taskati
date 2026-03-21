@@ -12,8 +12,9 @@ class TaskContainer extends StatelessWidget {
         width: double.infinity,
 
         decoration: BoxDecoration(
-          color: task.taskColor,
-          borderRadius: BorderRadius.circular(22),
+          color:Color(task.taskColor) ,
+
+      borderRadius: BorderRadius.circular(22),
         ) ,
 
 

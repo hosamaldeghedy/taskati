@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:taskaty_app/models/task_model.dart';
 import 'package:taskaty_app/widgets/app_button.dart';
 import 'package:taskaty_app/widgets/app_text_form_field.dart';
+
+import '../app_strings.dart';
 
 class AddTaskScreen extends StatefulWidget {
 
@@ -197,46 +200,65 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     ))
                 ),
                 SizedBox(height: 30),
-                AppButton(title: 'Create Task', onPressed: (){
-                  if (startTime != null && endTime != null) {
-                    if (endTime!.hour < startTime!.hour ||
-                        (endTime!.hour == startTime!.hour && endTime!.minute <= startTime!.minute)) {
-                      showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          title: Text('Error'),
-                          content: Text('End time must be after start time'),
+                AppButton(
+                  title: 'Create Task',
+                  onPressed: () {
+
+                    if (startTime != null && endTime != null) {
+                      if (endTime!.hour < startTime!.hour ||
+                          (endTime!.hour == startTime!.hour &&
+                              endTime!.minute <= startTime!.minute)) {
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: Text('Error'),
+                            content: Text('End time must be after start time'),
+                          ),
+                        );
+                        return;
+                      }
+                    }
+
+                    if (dateController.text.isEmpty ||
+                        startTimeController.text.isEmpty ||
+                        endTimeController.text.isEmpty) {
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('اختار التاريخ والوقت'),
                         ),
                       );
                       return;
                     }
-                  }
 
+                    if ((formKey.currentState?.validate() ?? false)) {
+                      if (activeColorIndex == -1) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text('please select task color'),
+                            content: Text('please select color'),
+                          ),
+                        );
+                        return;
+                      }
 
-                  if( (formKey.currentState?.validate()??false)) {
-                   if (activeColorIndex==-1){
-                     showDialog(context: context, builder: (context)=>
-                         AlertDialog(
-                           title: Text('please select task color'),
-                           content: Text('please select color'),
-                         )
-                     );
-                     return;
-                   }
-                   tasks.add(TaskModel(
-                     taskTitle: titleController.text,
-                     taskDescription: descriptionController.text,
-                     taskDate: dateController.text,
-                     taskStartTime: startTimeController.text,
-                     taskEndTime: endTimeController.text,
-                     taskColor: colors[activeColorIndex],
-                     taskStatus: 'TODO',
-
-                   ));
-                   Navigator.pop(context);
-                 }
-                }),
-
+                      Hive.box<TaskModel>(AppStrings.tasksBox)
+                          .add(TaskModel(
+                        taskTitle: titleController.text,
+                        taskDescription: descriptionController.text,
+                        taskDate: dateController.text,
+                        taskStartTime: startTimeController.text,
+                        taskEndTime: endTimeController.text,
+                        taskColor: colors[activeColorIndex].toARGB32(),
+                        taskStatus: 'TODO',
+                      ))
+                          .then((v) {
+                        Navigator.pop(context);
+                      });
+                    }
+                  },
+                ),
               ],
             ),
           ),

@@ -15,7 +15,8 @@ class TaskItem extends StatelessWidget {
       key: UniqueKey(),
       direction: DismissDirection.endToStart,
         onDismissed: (_) {
-          tasks.removeAt(tasks.indexOf(task));
+        task.delete();
+          // task.removeAt(task.indexOf(task));
           onDelete();
         },
 

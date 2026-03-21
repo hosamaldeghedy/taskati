@@ -1,21 +1,21 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
 import 'package:taskaty_app/models/task_model.dart';
+import 'package:taskaty_app/models/user_model.dart';
 import 'package:taskaty_app/widgets/date_and_add_task_row.dart';
 import 'package:taskaty_app/widgets/date_container.dart';
 import 'package:taskaty_app/widgets/home_app_bar.dart';
 import 'package:taskaty_app/widgets/task_item.dart';
 
+import '../app_strings.dart';
 import 'add_task_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  final String userName;
-  final File userImage;
+
   const HomeScreen({
     super.key,
-    required this.userName,
-    required this.userImage,
+
   });
 
   @override
@@ -23,10 +23,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   int selectedIndex = 0;
+  UserModel? user=Hive.box<UserModel>(AppStrings.userBox).getAt(0);
 
   @override
   Widget build(BuildContext context) {
+    List<TaskModel> tasks = Hive.box<TaskModel>(AppStrings.tasksBox).values.toList();
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -34,9 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: ListView(
             children: [
               HomeAppBar(
-                userName: widget.userName,
-                userImage: widget.userImage,
-              ),
+                user: user,),
               SizedBox(height: 10),
               DateAndAddTaskRow(
                 onPressed: () async {
